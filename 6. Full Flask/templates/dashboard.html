@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <div class="main">
+    <h1>DASHBOARD</h1>
+        <div class="wrap">
+            <a href="{{ url_for('chatbot') }}" class="login-button">Chatbot</a>
+            <a href="{{ url_for('add_questions') }}" class="login-button">Q&A</a>
+            <a href="{{ url_for('payment_page') }}" class="login-button">Payments</a>
+            <a href="{{ url_for('success_link') }}" class="login-button">Link</a>
+            <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>
+
+{% endblock %}

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #33ccff 0%, #ff99cc 100%);
+        }
+
+        h1 {
+            text-align: center;
+            color: #000;
+            font-size: 30px;
+        }
+
+        #tab-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        #trial-tab,
+        #monthly-tab,
+        #yearly-tab {
+            padding: 10px;
+            margin: 0 10px;
+            cursor: pointer;
+            border: none;
+            background-color: transparent;
+            font-size: 16px;
+            outline: none;
+        }
+
+        #trial-tab.selected,
+        #monthly-tab.selected,
+        #yearly-tab.selected {
+            border-bottom: 2px solid #3498db;
+        }
+
+        .subscription-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            justify-items: center;
+        }
+
+        .subscription-container form {
+            display: flex;
+            justify-content: center;
+        }
+
+        .heading-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .plan-box {
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            justify-content: center;
+            align-items: center;
+            padding: 5px;
+            margin: 5px;
+            cursor: pointer;
+            transition: border-color 0.3s;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 250px;
+        }
+
+        .plan-box:nth-child(1),
+        .plan-box:nth-child(2),
+        .plan-box:nth-child(3) {
+            background: linear-gradient(to top right, #6600ff 0%, #ff99cc 100%);
+        }
+
+        .plan-box:nth-child(4),
+        .plan-box:nth-child(5),
+        .plan-box:nth-child(6) {
+            background: linear-gradient(to top left, #00cc99 0%, #ff99cc 100%);
+        }
+
+        .plan-box:hover {
+            border-color: #3498db;
+        }
+
+        .selected {
+            border: 2px solid #3498db;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #3498db;
+            color: #fff;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+        }
+
+        .payment-options {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            box-sizing: border-box;
+        }
+
+        .close {
+            cursor: pointer;
+            margin-top: 10px;
+            color: #3498db;
+        }
+
+        #iframe-container {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+        }
+
+        #paypal-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top:20px;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .subscription-container trial-plans {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            justify-items: center;
+        }
+
+        .subscription-container .trial-plans form {
+            display: flex;
+            justify-content: center;
+        }
+
+        .subscription-container .trial-plans .plan-box {
+            background: linear-gradient(to top right, #ffcc00 0%, #ff9966 100%);
+        }
+
+    </style>
+    <!--<div id="iframe-container">
+        <iframe src="https://chatbotss.pythonanywhere.com" width="350" height="350" frameborder="0"></iframe>
+    </div>-->
+</head>
+<body>
+    <div class='heading-container'>
+        <h1>Choose a Subscription Plan</h1>
+    </div>
+
+    <div id="tab-container">
+        <button id="trial-tab" class="selected" onclick="showPlans('trial')">Trial</button>
+        <button id="monthly-tab" onclick="showPlans('monthly')">Monthly Plans</button>
+        <button id="yearly-tab" onclick="showPlans('yearly')">Yearly Plans</button>
+    </div>
+
+    <div class="subscription-container trial-plans">
+        {% for plan, details in plans['trial'].items() %}
+            <div class="plan-box">
+                <h3>{{ details.name }}</h3>
+                <p>${{ details.price }} For 10 days</p>
+                <p>{{ details.features }}</p>
+                <form action="{{ url_for('subscribe') }}" method="post" class="subscription-form">
+                    <input type="hidden" name="plan" value="trial_{{ plan }}">
+                    <input type="hidden" name="price" value="{{ details.price }}">
+                    <input type="hidden" name="duration" value="{{ details.duration }}">
+                    <button type="submit" style="background-color: #006400; color: #fff;">subscribe</button>
+                </form>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="subscription-container monthly-plans hide">
+        {% for plan, details in plans['monthly'].items() %}
+            <div class="plan-box">
+                <h3>{{ details.name }}</h3>
+                <p>${{ details.price }}/month</p>
+                <p>{{ details.features }}</p>
+                <form action="{{ url_for('subscribe') }}" method="post" class="subscription-form">
+                    <input type="hidden" name="plan" value="monthly_{{ plan }}">
+                    <input type="hidden" name="price" value="{{ details.price }}">
+                    <input type="hidden" name="duration" value="{{ details.duration }}">
+                    <button type="submit" style="background-color: #006400; color: #fff;">Subscribe</button>
+                </form>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="subscription-container yearly-plans hide">
+        {% for plan, details in plans['yearly'].items() %}
+            <div class="plan-box">
+                <h3>{{ details.name }}</h3>
+                <p>${{ details.price }}/year</p>
+                <p>{{ details.features }}</p>
+                <form action="{{ url_for('subscribe') }}" method="post" class="subscription-form">
+                    <input type="hidden" name="plan" value="yearly_{{ plan }}">
+                    <input type="hidden" name="price" value="{{ details.price }}">
+                    <input type="hidden" name="duration" value="{{ details.duration }}">
+                    <button type="submit" style="background-color: #006400; color: #fff;">Subscribe</button>
+                </form>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div id='paypal-container'>
+        <div id="paypal-button-container"></div>
+    </div>
+
+    <script src="https://www.paypal.com/sdk/js?client-id=AYU6Fxqz8IQZikDuQO2wMTWcNzt8uXAgbsmV_-byqTy1warPC7qPDBMzHYg1_yU6kbpUvS9m6kOfrPwz&currency=USD&version=latest" async></script>
+
+
+    <script>
+        var paypalButton = null;
+
+        function showPlans(period) {
+            document.getElementById('trial-tab').classList.remove('selected');
+            document.getElementById('monthly-tab').classList.remove('selected');
+            document.getElementById('yearly-tab').classList.remove('selected');
+            document.querySelector('.trial-plans').classList.add('hide');
+            document.querySelector('.monthly-plans').classList.add('hide');
+            document.querySelector('.yearly-plans').classList.add('hide');
+
+            document.getElementById(period + '-tab').classList.add('selected');
+            document.querySelector('.' + period + '-plans').classList.remove('hide');
+
+            // Close existing PayPal button if it exists
+            if (paypalButton) {
+                paypalButton.close();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Show trial plans by default
+            showPlans('trial');
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.subscription-form').forEach(function(form) {
+                form.addEventListener('submit', function (event) {
+                    event.preventDefault();
+
+                    var plan = this.querySelector('input[name="plan"]').value;
+                    var price = this.querySelector('input[name="price"]').value;
+                    var duration = this.querySelector('input[name="duration"]').value;
+
+                    console.log('Submitting subscription form:', plan, price, duration);
+
+
+                    // Clear the contents of the container before rendering a new button
+                    document.getElementById('paypal-button-container').innerHTML = '';
+
+                    // Render the PayPal button with the updated configuration
+                    paypal.Buttons({
+                        createOrder: function (data, actions) {
+                            return actions.order.create({
+                                purchase_units: [{
+                                    amount: {
+                                        value: price,
+                                        currency_code: 'USD',
+                                    }
+                                }]
+                            });
+                        },
+                        onApprove: function(data, actions) {
+                            // Capture the funds from the transaction
+                            return actions.order.capture().then(function(details) {
+                                // Access the payer's name and email
+                                var payerName = details.payer.name.given_name;
+                                var payerEmail = details.payer.email_address;
+                                var payerPlan = plan;
+
+                                //console.log.(payerEmail);
+
+                                // Execute the Python script with the payer's name and email
+                                fetch('http://127.0.0.1:5000/execute_python_script', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({payer_email: payerEmail, payer_plan: payerPlan}),
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    // Process the output from the Python script as needed
+                                    console.log(data.output);
+                                    console.error(data.error);
+                                    window.location.href = '/success_link?user=' + encodeURIComponent(payerEmail);
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                });
+
+                                // Show a success message to the buyer
+                                alert('Transaction completed by ' + payerEmail );
+
+                                var expirationDate = new Date();
+                                expirationDate.setDate(expirationDate.getDate() + parseInt(duration));
+                                document.cookie = `subscription_expiration=${expirationDate.toUTCString()}; expires=${expirationDate.toUTCString()}`;
+                            });
+                        }
+
+                    }).render('#paypal-button-container');
+    
+                    // Assign the rendered button to the variable
+                    paypalButton = paypal.Buttons({
+                        // configuration options
+                    });    
+                });
+            });
+        });
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!-- chatbot.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+</head>
+<body>
+    <div id="chatbot-window">
+        <div id="messages"></div>
+        <input type="text" id="question" placeholder="Ask me a question...">
+        <button onclick="sendQuestion()">Send</button>
+    </div>
+
+    <script>
+        function sendQuestion() {
+            const question = document.getElementById('question').value;
+            fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ question: question }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                const messages = document.getElementById('messages');
+                messages.innerHTML += `<div><b>You:</b> ${question}</div>`;
+                messages.innerHTML += `<div><b>Bot:</b> ${data.response}</div>`;
+                document.getElementById('question').value = '';
+            });
+        }
+    </script>
+</body>
+</html>

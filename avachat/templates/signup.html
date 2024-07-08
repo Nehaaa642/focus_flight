@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!DOCTYPE html> 
+<html> 
+
+<head> 
+    <title>Registration Form</title> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <style>
+    #referral {
+      display: none; /* Hide the referral input */
+    }
+  </style>
+</head> 
+
+<body> 
+  <div class="main"> 
+    <h1>SignUp</h1> 
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <p>{{ form.f_name.label }}{{ form.f_name(size=32) }}</p>
+        <p>{{ form.l_name.label }}{{ form.l_name(size=32) }}</p>
+        <p>{{ form.email.label }}{{ form.email(size=32) }}</p>
+        <p>{{ form.dob.label }}{{ form.dob(size=32) }}</p>
+        <p>{{ form.password.label }}{{ form.password(size=32) }}</p>
+        <p>{{ form.confirm_password.label }}{{ form.confirm_password(size=32) }}</p>
+        <p>{{ form.mobile.label }}{{ form.mobile(size=32) }}</p>
+        <p>{{ form.gender.label }}{{ form.gender() }}</p>
+        <p>{{ form.submit() }}</p>
+        <a href="{{ url_for('login') }}" class="login-button">Login</a>
+    </form>    
+  </div> 
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <script>
+    // Function to get URL parameters
+    function getParameterByName(name, url) {
+      if (!url) url = window.location.href;
+      name = name.replace(/[\[\]]/g, "\\$&");
+      var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+    // Function to set referral field value
+    function setReferralValue() {
+      var referralValue = getParameterByName('referral');
+      if (referralValue !== null) {
+        document.getElementById('referral').value = referralValue;
+      }
+    }
+
+    // Call the function on page load
+    window.onload = setReferralValue;
+  </script>
+</body> 
+</html>
+
+{% endblock %}

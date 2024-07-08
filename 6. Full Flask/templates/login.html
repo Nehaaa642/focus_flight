@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Login Form</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <div class="main">
+        <h1>Login</h1>
+
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <p>{{ form.email.label }}{{ form.email(size=32) }}</p>
+            <p>{{ form.password.label }}{{ form.password(size=32) }}</p>
+            <p>{{ form.submit() }}</p>
+            <a href="{{ url_for('signup') }}" class="login-button">Signup</a>
+        </form>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>
+
+{% endblock %}

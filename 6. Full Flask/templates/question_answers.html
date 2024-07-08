@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Add Questions and Answers</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <div class="main">
+        <h1>Question & Answers</h1>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <p>{{ form.question.label }}{{ form.question(size=32) }}</p>
+            <p>{{ form.answer.label }}{{ form.answer(size=32) }}</p>
+            <p>{{ form.submit() }}</p>
+        </form>
+        <a href="{{ url_for('dashboard') }}" class="login-button">Back</a>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>
+
+{% endblock %}

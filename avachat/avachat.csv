@@ -1,0 +1,3 @@
+f_name,l_name,email,dob,password,mobile,gender,plan,start_date,end_date
+Test2,Git2,t3@gmail.com,06-06-24,$2b$12$stCfleI9m/5pdZ751DZ5suAox2td9HytDEDxQoVDsjgzfthgANv5m,12121212,male,trial_trial_plan,2024-06-25,2024-07-05
+Test,Git,t@gmail.com,01-06-24,$2b$12$0/LS664GX46wwX22lXyNgupf3L7/Fv2qqtIdSPBf0Cdtp5Ie0ltx.,121234232,male,,,
